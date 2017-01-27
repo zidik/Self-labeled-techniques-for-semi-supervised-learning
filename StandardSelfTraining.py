@@ -1,5 +1,6 @@
 from sklearn import neighbors
 from sklearn import svm
+from sklearn import tree
 
 
 class StandardSelfTraining:
@@ -28,6 +29,24 @@ class StandardSelfTraining:
             # Epsilon parameter missing?
         )
         return StandardSelfTraining("Self-Training (SVM)", base_clf)
+
+    @staticmethod
+    def CART():
+        base_clf = tree.DecisionTreeClassifier(
+            criterion='entropy',
+            #splitter='best',
+            #max_depth=None,
+            #min_samples_split=2,
+            min_samples_leaf=2,
+            #min_weight_fraction_leaf=0.0,
+            #max_features=None,
+            #random_state=None,
+            #max_leaf_nodes=None,
+            #min_impurity_split=1e-07,
+            #class_weight=None,
+            #presort=False,
+        )
+        return StandardSelfTraining("Self-Training (CART)", base_clf)
 
     def __init__(self, name, base_classifier, max_iterations=40):
         self.name = name
