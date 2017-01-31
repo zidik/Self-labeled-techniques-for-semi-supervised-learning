@@ -13,8 +13,6 @@ class TriTraining:
         return "Classifier: " + self.name + "\nParameters: " + str(self.base_classifier.get_params())
 
     def fit(self, X, y):
-        X = X.as_matrix()
-        y = y.as_matrix()
         unlabeled = y == "unlabeled"
         labeled = ~unlabeled
 
@@ -101,6 +99,7 @@ class Third:
         prediction_2 = third_2.predict(self.labeled_X)
         both_incorrect = np.count_nonzero((prediction_1 != self.labeled_y) & (prediction_2 != self.labeled_y))
         both_same = np.count_nonzero(prediction_1 == prediction_2)
+        if(both_same == 0): return np.inf
         error = both_incorrect/both_same
         return error
 
@@ -111,26 +110,3 @@ class Third:
 #Helper for rotating a list
 def rotate(l, n):
     return l[n:] + l[:n]
-
-
-if __name__ == "__main__":
-    import base_classifiers
-    path_to_datasets = "../Datasets/"
-
-    # All datasets used for testing
-    dataset_names = ["bupa", "abalone"]
-    labeling_rates = [10, 20, 30, 40]
-
-
-    def load_dataset(path):
-        """Load one dataset"""
-        return pd.read_csv(path, header=None, sep=", ", engine="python", comment="@")
-
-
-    def load_datasets(dataset_name, labeling_rate=10):
-        """ Load 3 datasets: training, transitive and testing"""
-        partial_path = "{0}SSC_{1}labeled/{2}/{2}-10-1".format(path_to_datasets, labeling_rate, dataset_name)
-        dataframes = {t: load_dataset(partial_path + t + ".dat") for t in ["tra", "trs", "tst"]}
-        return dataframes
-
-    TriTraining("test", base_classifiers.knn)
